@@ -1,212 +1,141 @@
-// import React, { useEffect, useRef, useState } from 'react';
-// import { Link } from 'react-router-dom';
-// import { useSelector } from 'react-redux';
 
+import React, { useState, useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
 
-// const Navigation = () => {
-//     const cartLength = useSelector((state) => state.cart.cartLength);
-//     const user = useSelector(state => state.user.user);
+const Navigation = () => {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [navBarToggle, setNavBarToggle] = useState(false);
+  const user = false;  // Update with actual authentication state
 
-//     const [viewSearchFilter, setViewSearchFilter] = useState(false);
-//     const [navBarToggle, setNavBarToggle] = useState(false);
+  // Refs for handling click outside menu
+  const toggleNavBarRef = useRef(null);
+  const dropdownNavBarRef = useRef(null);
 
-//     const toggleSearchFilterButtonRef = useRef(null);
-//     const dropdownSearchFilterRef = useRef(null);
+  // Close navbar when clicking outside
+  useEffect(() => {
+    const handleCloseNavBarMenu = (event) => {
+      if (
+        toggleNavBarRef.current &&
+        !toggleNavBarRef.current.contains(event.target) &&
+        dropdownNavBarRef.current &&
+        !dropdownNavBarRef.current.contains(event.target)
+      ) {
+        setNavBarToggle(false);
+      }
+    };
 
-//     const toggleNavBarRef = useRef(null);
-//     const dropdownNavBarRef = useRef(null);
+    document.addEventListener("click", handleCloseNavBarMenu);
 
-//     const logoImg = 'https://res.cloudinary.com/dcd6y2awx/image/upload/f_auto,q_auto/v1/PlantSeller/UI%20Images/plant_seller_bg_none';
+    return () => {
+      document.removeEventListener("click", handleCloseNavBarMenu);
+    };
+  }, []);
 
-//     useEffect(() => {
+  return (
+    <nav className="bg-dark fixed-top w-full shadow-md">
+      <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8 p-2">
+        <div className="relative flex h-16 items-center justify-between">
+          {/* Mobile Menu Button */}
+          <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
+            <button
+              type="button"
+              className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+              aria-controls="mobile-menu"
+              aria-expanded={menuOpen}
+              onClick={() => setMenuOpen(!menuOpen)}
+            >
+              <span className="sr-only">Open main menu</span>
+              {menuOpen ? (
+                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              ) : (
+                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16m-7 6h7" />
+                </svg>
+              )}
+            </button>
+          </div>
 
-//         // Close menu when clicking outside of the menu area
-//         const handleCloseSearchFilter = (event) => {
-//             if (dropdownSearchFilterRef.current && !dropdownSearchFilterRef.current.contains(event.target) && toggleSearchFilterButtonRef.current && !toggleSearchFilterButtonRef.current.contains(event.target)) {
-//                 setViewSearchFilter(false);
-//             }
-//         };
+          {/* Logo and Navigation Links */}
+          <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
+            <h1 className="text-white text-xl font-semibold italic">Farm Sync</h1>
+            <div className="hidden sm:ml-6 sm:block">
+              <div className="flex space-x-4">
 
-//         const handleCloseNavBarMenu = (event) => {
-//             if (toggleNavBarRef.current && !toggleNavBarRef.current.contains(event.target) && dropdownNavBarRef.current && !dropdownNavBarRef.current.contains(event.target)) {
-//                 setNavBarToggle(false);
-//             }
-//         };
-
-//         document.addEventListener('click', handleCloseSearchFilter);
-//         document.addEventListener('click', handleCloseNavBarMenu);
-
-//         return () => {
-//             document.removeEventListener('click', handleCloseSearchFilter);
-//             document.removeEventListener('click', handleCloseNavBarMenu);
-//         };
-//     }, []);
-
-//     return (
-//         <nav className="navbar navbar-expand-md navbar-dark bg-dark fixed-top w-100">
-//             <div className="container-fluid">
-//                 {/* <Link className="navbar-brand" to="/"><img src={logoImg} alt="plant seller logo" className='logo-img' /></Link> */}
-//                 <h1 className="italic text-white decoration-double">Farm Sync</h1>
-//                 <button ref={toggleNavBarRef} className="navbar-toggler" type="button" onClick={() => setNavBarToggle(!navBarToggle)} >
-//                     <span className="navbar-toggler-icon"></span>
-//                 </button>
-//                 <div ref={dropdownNavBarRef} className={`collapse navbar-collapse justify-content-around transition ${navBarToggle? "show " : ""}`}>
-//                     <div className="d-flex col-md-5 col-lg-7">
-//                         <div className="input-group">
-//                             <div className="dropdown">
-//                                 <button id="filerSearch" ref={toggleSearchFilterButtonRef} type="button" className="btn btn-info dropdown-toggle" style={{ borderRadius: "0.375rem 0 0 0.375rem" }} onClick={() => { setViewSearchFilter(!viewSearchFilter) }}>
-//                                     <i className='fas fa-filter'></i> <span className='d-md-none d-lg-inline-block'>Filter</span>
-//                                 </button>
-//                                 <div className={`dropdown-menu p-2 ${viewSearchFilter && 'd-block'} `} ref={dropdownSearchFilterRef} >
-//                                     <div className="form-check font-weight-bold">
-//                                         <input type="checkbox" name="allProducts" id="allProducts" className='form-check-input' />
-//                                         <label htmlFor="allProducts" className='form-check-label '>All Products</label>
-//                                     </div>
-//                                     <div className="form-check font-weight-bold">
-//                                         <input type="checkbox" name="flower" id="flower" className='form-check-input' />
-//                                         <label htmlFor="flower" className='form-check-label '>Flowering</label>
-//                                     </div>
-//                                     <div className="form-check font-weight-bold">
-//                                         <input type="checkbox" name="medicinal" id="medicinal" className='form-check-input' />
-//                                         <label htmlFor="medicinal" className='form-check-label '>Medicinal</label>
-//                                     </div>
-//                                     <div className="form-check font-weight-bold">
-//                                         <input type="checkbox" name="ornamental" id="ornamental" className='form-check-input' />
-//                                         <label htmlFor="ornamental" className='form-check-label '>Ornamental</label>
-//                                     </div>
-//                                     <div className="form-check font-weight-bold">
-//                                         <input type="checkbox" name="indoor" id="indoor" className='form-check-input' />
-//                                         <label htmlFor="indoor" className='form-check-label '>Indoor</label>
-//                                     </div>
-//                                 </div>
-//                             </div>
-//                             <input className="form-control border-none" type="text" placeholder="Search Keywords" style={{ boxShadow: "none" }} />
-//                             <button className="btn btn-info" type="button"><i className='fas fa-search'></i></button>
-//                         </div>
-//                     </div>
-//                     <div className="navbar-nav d-flex justify-content-end">
-//                         {/* <div className="nav-item">
-//                             <Link className="nav-link d-flex" to="/crop" onClick={() => setNavBarToggle(false)}>Products</Link>
-//                         </div> */}
-//                         <div className="nav-item">
-//                             <Link className="nav-link" to="/contact-us" onClick={() => setNavBarToggle(false)}>Contact Us</Link>
-//                         </div>
-//                         <div className="nav-item">
-//                             <Link className="nav-link" to={`${user ? "/profile" : "/login"}`} onClick={() => setNavBarToggle(false)}><i className='fas fa-user-alt'></i>{user ? " Profile" : " Login"}</Link>
-//                         </div>
-//                         {/* <div className="nav-item">
-//                             <Link style={{ position: "relative" }} className="nav-link" to="/cart" onClick={() => setNavBarToggle(false)}>
-//                                 <i style={{ fontSize: "23px" }} className="fas fa-shopping-cart small"> </i>
-//                                 <span style={{ fontSize: "10px", position: "absolute", top: "0px", left: "18px" }} className='badge bg-success'>{cartLength??0}</span>
-//                                 <span> Cart</span>
-//                             </Link>
-//                         </div> */}
-//                     </div>
-//                 </div>
-//             </div>
-//         </nav>
-
-//     )
-// }
-
-// export default Navigation
-
-
-import React, { useEffect, useRef, useState } from 'react'; 
-import { Link } from 'react-router-dom'; 
-import { useSelector } from 'react-redux';
-
-const Navigation = () => { 
-    const cartLength = useSelector((state) => state.cart.cartLength); 
-    const user = useSelector(state => state.user.user);
-
-    const [viewSearchFilter, setViewSearchFilter] = useState(false); 
-    const [navBarToggle, setNavBarToggle] = useState(false);
-
-    const toggleSearchFilterButtonRef = useRef(null); 
-    const dropdownSearchFilterRef = useRef(null);
-
-    const toggleNavBarRef = useRef(null); 
-    const dropdownNavBarRef = useRef(null);
-
-    const logoImg = 'https://res.cloudinary.com/dcd6y2awx/image/upload/f_auto,q_auto/v1/PlantSeller/UI%20Images/plant_seller_bg_none';
-
-    useEffect(() => { 
-        const handleCloseSearchFilter = (event) => { 
-            if (dropdownSearchFilterRef.current && !dropdownSearchFilterRef.current.contains(event.target) && toggleSearchFilterButtonRef.current && !toggleSearchFilterButtonRef.current.contains(event.target)) { 
-                setViewSearchFilter(false); 
-            } 
-        };
-
-        const handleCloseNavBarMenu = (event) => { 
-            if (toggleNavBarRef.current && !toggleNavBarRef.current.contains(event.target) && dropdownNavBarRef.current && !dropdownNavBarRef.current.contains(event.target)) { 
-                setNavBarToggle(false); 
-            } 
-        };
-
-        document.addEventListener('click', handleCloseSearchFilter); 
-        document.addEventListener('click', handleCloseNavBarMenu); 
-
-        return () => { 
-            document.removeEventListener('click', handleCloseSearchFilter); 
-            document.removeEventListener('click', handleCloseNavBarMenu); 
-        }; 
-    }, []);
-
-    return ( 
-        <nav className="bg-dark fixed-top w-full shadow-md"> 
-            <div className="container mx-auto flex items-center justify-between p-4">
-                <h1 className="text-white text-2xl font-semibold italic decoration-double mr-2">Farm Sync</h1>
-                <button ref={toggleNavBarRef} className="text-white md:hidden p-2" onClick={() => setNavBarToggle(!navBarToggle)}>
-                    <span className="block w-5 h-0.5 bg-white mb-1"></span>
-                    <span className="block w-5 h-0.5 bg-white mb-1"></span>
-                    <span className="block w-5 h-0.5 bg-white"></span>
-                </button>
-
-                <div ref={dropdownNavBarRef} className={`flex-1 md:flex justify-center items-center md:justify-between md:static transition-all duration-300 ${navBarToggle ? 'block' : 'hidden'} md:block`}>
-                    <div className="flex items-center space-x-4"> 
-                        <div className="relative">
-                            <button
-                                ref={toggleSearchFilterButtonRef} 
-                                className="bg-info text-white py-2 px-4 rounded-l-md flex items-center space-x-2" 
-                                onClick={() => setViewSearchFilter(!viewSearchFilter)}
-                            >
-                                <i className="fas fa-filter"></i>
-                                <span className="hidden lg:inline-block">Filter</span>
-                            </button>
-                            <div className={`absolute bg-white p-2 rounded-md shadow-md ${viewSearchFilter ? 'block' : 'hidden'}`} ref={dropdownSearchFilterRef}>
-                                {['All Products', 'Flowering', 'Medicinal', 'Ornamental', 'Indoor'].map((filter, index) => (
-                                    <div className="form-check font-semibold" key={index}>
-                                        <input type="checkbox" name={filter.toLowerCase()} id={filter.toLowerCase()} className="form-check-input" />
-                                        <label htmlFor={filter.toLowerCase()} className="form-check-label">{filter}</label>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                        <input className="form-control border-none p-2 shadow-none" type="text" placeholder="Search Keywords" />
-                        <button className="bg-info text-white p-2 rounded-r-md">
-                            <i className="fas fa-search"></i>
-                        </button>
-                    </div>
-
-                    <div className="flex items-center space-x-4">
-                        <div className="relative">
-                            <Link className="text-white py-2 px-4 hover:bg-gray-700 rounded-md" to="/contact-us" onClick={() => setNavBarToggle(false)}>
-                                Contact Us
-                            </Link>
-                        </div>
-                        <div className="relative">
-                            <Link className="text-white py-2 px-4 hover:bg-gray-700 rounded-md" to={`${user ? "/profile" : "/login"}`} onClick={() => setNavBarToggle(false)}>
-                                <i className="fas fa-user-alt"></i>
-                                {user ? " Profile" : " Login"}
-                            </Link>
-                        </div>
-                    </div>
-                </div>
+              <Link to="/" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white  no-underline">
+                  Home
+                </Link>
+                
+                {/* <Link to="/team" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white no-underline">
+                  Team
+                </Link> */}
+                <Link to="/game" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white no-underline">
+                  Game
+                </Link>
+                <Link to="/calendar" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white no-underline">
+                  Calendar
+                </Link>
+                <Link to="/financial-tracker" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white no-underline">
+                Financial-tracker
+                </Link>
+               
+              </div>
             </div>
-        </nav>
-    );
-}
+          </div>
+
+          {/* Profile Section */}
+          <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+            <div className="relative">
+              <Link to={user ? "/profile" : "/signup"} className="text-white py-2 px-4 hover:bg-gray-700 rounded-md no-underline">
+                {user ? "Profile" : "Sign In"}
+              </Link>
+            </div>
+          </div>
+
+          {/* Toggle for mobile nav */}
+          <div ref={toggleNavBarRef} className="navbar-toggler sm:hidden">
+            <button
+              type="button"
+              className="navbar-toggler-icon"
+              onClick={() => setNavBarToggle(!navBarToggle)}
+            >
+              <span className="navbar-toggler-icon"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile Menu */}
+      {navBarToggle && (
+        <div ref={dropdownNavBarRef} className="sm:hidden">
+          <div className="space-y-1 px-2 pb-3 pt-2">
+            <Link to="/dashboard" className="block rounded-md bg-gray-900 px-3 py-2 text-base font-medium text-white">
+              Dashboard
+            </Link>
+            {/* <Link to="/team" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
+              Team
+            </Link> */}
+            <Link to="/projects" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
+              Projects
+            </Link>
+            <Link to="/calendar" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
+              Calendar
+            </Link>
+            {!user && (
+              <Link to="/sign-up" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
+                Sign Up
+              </Link>
+            )}
+            <Link to={user ? "/profile" : "/sign-in"} className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
+              {user ? "Profile" : "Sign In"}
+            </Link>
+          </div>
+        </div>
+      )}
+    </nav>
+  );
+};
 
 export default Navigation;
 
@@ -214,212 +143,136 @@ export default Navigation;
 
 
 
-// import React, { useEffect, useRef, useState } from 'react';
-// import { Link } from 'react-router-dom';
-// import { useSelector } from 'react-redux';
+// import React, { useState, useEffect, useRef } from "react";
+// import { Link } from "react-router-dom";
 
 // const Navigation = () => {
-//     const cartLength = useSelector((state) => state.cart.cartLength);
-//     const user = useSelector(state => state.user.user);
+//   const [menuOpen, setMenuOpen] = useState(false);
+//   const [navBarToggle, setNavBarToggle] = useState(false);
+//   const user = false;  // Update with actual authentication state
 
-//     const [viewSearchFilter, setViewSearchFilter] = useState(false);
-//     const [navBarToggle, setNavBarToggle] = useState(false);
+//   // Refs for handling click outside menu
+//   const toggleNavBarRef = useRef(null);
+//   const dropdownNavBarRef = useRef(null);
 
-//     const toggleSearchFilterButtonRef = useRef(null);
-//     const dropdownSearchFilterRef = useRef(null);
+//   // Close navbar when clicking outside
+//   useEffect(() => {
+//     const handleCloseNavBarMenu = (event) => {
+//       if (
+//         toggleNavBarRef.current &&
+//         !toggleNavBarRef.current.contains(event.target) &&
+//         dropdownNavBarRef.current &&
+//         !dropdownNavBarRef.current.contains(event.target)
+//       ) {
+//         setNavBarToggle(false);
+//       }
+//     };
 
-//     const toggleNavBarRef = useRef(null);
-//     const dropdownNavBarRef = useRef(null);
+//     document.addEventListener("click", handleCloseNavBarMenu);
 
-//     const logoImg = 'https://res.cloudinary.com/dcd6y2awx/image/upload/f_auto,q_auto/v1/PlantSeller/UI%20Images/plant_seller_bg_none';
+//     return () => {
+//       document.removeEventListener("click", handleCloseNavBarMenu);
+//     };
+//   }, []);
 
-//     useEffect(() => {
-//         // Close menu when clicking outside of the menu area
-//         const handleCloseSearchFilter = (event) => {
-//             if (dropdownSearchFilterRef.current && !dropdownSearchFilterRef.current.contains(event.target) && toggleSearchFilterButtonRef.current && !toggleSearchFilterButtonRef.current.contains(event.target)) {
-//                 setViewSearchFilter(false);
-//             }
-//         };
+//   return (
+//     <nav className="bg-dark fixed-top w-full shadow-md">
+//       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8 p-2">
+//         <div className="relative flex h-16 items-center justify-between">
+//           {/* Mobile Menu Button */}
+//           <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
+//             <button
+//               type="button"
+//               className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+//               aria-controls="mobile-menu"
+//               aria-expanded={menuOpen}
+//               onClick={() => setMenuOpen(!menuOpen)}
+//             >
+//               <span className="sr-only">Open main menu</span>
+//               {menuOpen ? (
+//                 <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+//                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+//                 </svg>
+//               ) : (
+//                 <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+//                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16m-7 6h7" />
+//                 </svg>
+//               )}
+//             </button>
+//           </div>
 
-//         const handleCloseNavBarMenu = (event) => {
-//             if (toggleNavBarRef.current && !toggleNavBarRef.current.contains(event.target) && dropdownNavBarRef.current && !dropdownNavBarRef.current.contains(event.target)) {
-//                 setNavBarToggle(false);
-//             }
-//         };
-
-//         document.addEventListener('click', handleCloseSearchFilter);
-//         document.addEventListener('click', handleCloseNavBarMenu);
-
-//         return () => {
-//             document.removeEventListener('click', handleCloseSearchFilter);
-//             document.removeEventListener('click', handleCloseNavBarMenu);
-//         };
-//     }, []);
-
-//     return (
-//         <nav className="navbar navbar-expand-md navbar-dark bg-dark fixed-top w-100">
-//             <div className="container-fluid">
-//                 <h1 className="italic text-white decoration-double">Farm Sync</h1>
-//                 <button ref={toggleNavBarRef} className="navbar-toggler" type="button" onClick={() => setNavBarToggle(!navBarToggle)} >
-//                     <span className="navbar-toggler-icon"></span>
-//                 </button>
-//                 <div ref={dropdownNavBarRef} className={`collapse navbar-collapse justify-content-around transition ${navBarToggle ? "show" : ""}`}>
-//                     <div className="d-flex col-md-5 col-lg-7">
-//                         <div className="input-group">
-//                             <div className="dropdown">
-//                                 <button id="filterSearch" ref={toggleSearchFilterButtonRef} type="button" className="btn btn-info dropdown-toggle" style={{ borderRadius: "0.375rem 0 0 0.375rem" }} onClick={() => { setViewSearchFilter(!viewSearchFilter) }}>
-//                                     <i className='fas fa-filter'></i> <span className='d-md-none d-lg-inline-block'>Filter</span>
-//                                 </button>
-//                                 <div className={`dropdown-menu p-2 ${viewSearchFilter && 'd-block'} `} ref={dropdownSearchFilterRef} >
-//                                     <div className="form-check font-weight-bold">
-//                                         <input type="checkbox" name="allProducts" id="allProducts" className='form-check-input' />
-//                                         <label htmlFor="allProducts" className='form-check-label'>All Products</label>
-//                                     </div>
-//                                     <div className="form-check font-weight-bold">
-//                                         <input type="checkbox" name="flower" id="flower" className='form-check-input' />
-//                                         <label htmlFor="flower" className='form-check-label'>Flowering</label>
-//                                     </div>
-//                                     <div className="form-check font-weight-bold">
-//                                         <input type="checkbox" name="medicinal" id="medicinal" className='form-check-input' />
-//                                         <label htmlFor="medicinal" className='form-check-label'>Medicinal</label>
-//                                     </div>
-//                                     <div className="form-check font-weight-bold">
-//                                         <input type="checkbox" name="ornamental" id="ornamental" className='form-check-input' />
-//                                         <label htmlFor="ornamental" className='form-check-label'>Ornamental</label>
-//                                     </div>
-//                                     <div className="form-check font-weight-bold">
-//                                         <input type="checkbox" name="indoor" id="indoor" className='form-check-input' />
-//                                         <label htmlFor="indoor" className='form-check-label'>Indoor</label>
-//                                     </div>
-//                                 </div>
-//                             </div>
-//                             <input className="form-control border-none" type="text" placeholder="Search Keywords" style={{ boxShadow: "none" }} />
-//                             <button className="btn btn-info" type="button"><i className='fas fa-search'></i></button>
-//                         </div>
-//                     </div>
-//                     <div className="navbar-nav d-flex justify-content-end">
-//                         <div className="nav-item">
-//                             <Link className="nav-link" to="/calendar" onClick={() => setNavBarToggle(false)}>Calendar</Link>
-//                         </div>
-//                         <div className="nav-item">
-//                             <Link className="nav-link" to="/contact-us" onClick={() => setNavBarToggle(false)}>Contact Us</Link>
-//                         </div>
-//                         <div className="nav-item">
-//                             <Link className="nav-link" to={`${user ? "/profile" : "/login"}`} onClick={() => setNavBarToggle(false)}><i className='fas fa-user-alt'></i>{user ? " Profile" : " Login"}</Link>
-//                         </div>
-//                     </div>
-//                 </div>
+//           {/* Logo and Navigation Links */}
+//           <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
+//             <h1 className="text-white text-xl font-semibold italic">Farm Sync</h1>
+//             <div className="hidden sm:ml-6 sm:block">
+//               <div className="flex space-x-4">
+//                 <Link to="/dashboard" className="rounded-md bg-gray-900 px-3 py-2 text-sm font-medium text-white">
+//                   Dashboard
+//                 </Link>
+//                 <Link to="/team" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
+//                   Team
+//                 </Link>
+//                 <Link to="/projects" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
+//                   Projects
+//                 </Link>
+//                 <Link to="/calendar" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
+//                   Calendar
+//                 </Link>
+//               </div>
 //             </div>
-//         </nav>
-//     );
-// };  
+//           </div>
 
-// export default Navigation;
-
-
-
-// import React, { useEffect, useRef, useState } from 'react';
-// import { Link } from 'react-router-dom';
-// import { useSelector } from 'react-redux';
-
-// const Navigation = () => {
-//     const cartLength = useSelector((state) => state.cart.cartLength);
-//     const user = useSelector(state => state.user.user);
-
-//     const [viewSearchFilter, setViewSearchFilter] = useState(false);
-//     const [navBarToggle, setNavBarToggle] = useState(false);
-
-//     const toggleSearchFilterButtonRef = useRef(null);
-//     const dropdownSearchFilterRef = useRef(null);
-
-//     const toggleNavBarRef = useRef(null);
-//     const dropdownNavBarRef = useRef(null);
-
-//     const logoImg = 'https://res.cloudinary.com/dcd6y2awx/image/upload/f_auto,q_auto/v1/PlantSeller/UI%20Images/plant_seller_bg_none';
-
-//     useEffect(() => {
-//         // Close menu when clicking outside of the menu area
-//         const handleCloseSearchFilter = (event) => {
-//             if (dropdownSearchFilterRef.current && !dropdownSearchFilterRef.current.contains(event.target) && toggleSearchFilterButtonRef.current && !toggleSearchFilterButtonRef.current.contains(event.target)) {
-//                 setViewSearchFilter(false);
-//             }
-//         };
-
-//         const handleCloseNavBarMenu = (event) => {
-//             if (toggleNavBarRef.current && !toggleNavBarRef.current.contains(event.target) && dropdownNavBarRef.current && !dropdownNavBarRef.current.contains(event.target)) {
-//                 setNavBarToggle(false);
-//             }
-//         };
-
-//         document.addEventListener('click', handleCloseSearchFilter);
-//         document.addEventListener('click', handleCloseNavBarMenu);
-
-//         return () => {
-//             document.removeEventListener('click', handleCloseSearchFilter);
-//             document.removeEventListener('click', handleCloseNavBarMenu);
-//         };
-//     }, []);
-
-//     return (
-//         <nav className="navbar navbar-expand-md navbar-dark bg-dark fixed-top w-100">
-//             <div className="container-fluid">
-//                 <h1 className="italic text-white decoration-double">Farm Sync</h1>
-//                 <button ref={toggleNavBarRef} className="navbar-toggler" type="button" onClick={() => setNavBarToggle(!navBarToggle)}>
-//                     <span className="navbar-toggler-icon"></span>
-//                 </button>
-//                 <div ref={dropdownNavBarRef} className={`collapse navbar-collapse justify-content-around transition ${navBarToggle ? 'show' : ''}`}>
-//                     <div className="d-flex col-md-5 col-lg-7">
-//                         <div className="input-group">
-//                             <div className="dropdown">
-//                                 <button id="filterSearch" ref={toggleSearchFilterButtonRef} type="button" className="btn btn-info dropdown-toggle" style={{ borderRadius: "0.375rem 0 0 0.375rem" }} onClick={() => setViewSearchFilter(!viewSearchFilter)}>
-//                                     <i className='fas fa-filter'></i> <span className='d-md-none d-lg-inline-block'>Filter</span>
-//                                 </button>
-//                                 <div className={`dropdown-menu p-2 ${viewSearchFilter ? 'd-block' : ''}`} ref={dropdownSearchFilterRef}>
-//                                     <div className="form-check font-weight-bold">
-//                                         <input type="checkbox" name="allProducts" id="allProducts" className='form-check-input' />
-//                                         <label htmlFor="allProducts" className='form-check-label'>All Products</label>
-//                                     </div>
-//                                     <div className="form-check font-weight-bold">
-//                                         <input type="checkbox" name="flower" id="flower" className='form-check-input' />
-//                                         <label htmlFor="flower" className='form-check-label'>Flowering</label>
-//                                     </div>
-//                                     <div className="form-check font-weight-bold">
-//                                         <input type="checkbox" name="medicinal" id="medicinal" className='form-check-input' />
-//                                         <label htmlFor="medicinal" className='form-check-label'>Medicinal</label>
-//                                     </div>
-//                                     <div className="form-check font-weight-bold">
-//                                         <input type="checkbox" name="ornamental" id="ornamental" className='form-check-input' />
-//                                         <label htmlFor="ornamental" className='form-check-label'>Ornamental</label>
-//                                     </div>
-//                                     <div className="form-check font-weight-bold">
-//                                         <input type="checkbox" name="indoor" id="indoor" className='form-check-input' />
-//                                         <label htmlFor="indoor" className='form-check-label'>Indoor</label>
-//                                     </div>
-//                                 </div>
-//                             </div>
-//                             <input className="form-control border-none" type="text" placeholder="Search Keywords" style={{ boxShadow: "none" }} />
-//                             <button className="btn btn-info" type="button"><i className='fas fa-search'></i></button>
-//                         </div>
-//                     </div>
-//                     <div className="navbar-nav d-flex justify-content-end">
-//                         <div className="nav-item">
-//                             <Link className="nav-link" to="/calendar" onClick={() => setNavBarToggle(false)}>Calendar</Link>
-//                         </div>
-//                         <div className="nav-item">
-//                             <Link className="nav-link" to="/contact-us" onClick={() => setNavBarToggle(false)}>Contact Us</Link>
-//                         </div>
-//                         <div className="nav-item">
-//                             <Link className="nav-link" to={user ? "/profile" : "/login"} onClick={() => setNavBarToggle(false)}>
-//                                 <i className='fas fa-user-alt'></i> {user ? "Profile" : "Login"}
-//                             </Link>
-//                         </div>
-//                     </div>
-//                 </div>
+//           {/* Profile Section */}
+//           <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+//             <div className="relative">
+//               <Link to={user ? "/profile" : "/sign-in"} className="text-white py-2 px-4 hover:bg-gray-700 rounded-md">
+//                 {user ? "Profile" : "Sign In"}
+//               </Link>
 //             </div>
-//         </nav>
-//     );
+//           </div>
+
+//           {/* Toggle for mobile nav */}
+//           <div ref={toggleNavBarRef} className="navbar-toggler sm:hidden">
+//             <button
+//               type="button"
+//               className="navbar-toggler-icon"
+//               onClick={() => setNavBarToggle(!navBarToggle)}
+//             >
+//               <span className="navbar-toggler-icon"></span>
+//             </button>
+//           </div>
+//         </div>
+//       </div>
+
+//       {/* Mobile Menu */}
+//       {navBarToggle && (
+//         <div ref={dropdownNavBarRef} className="sm:hidden">
+//           <div className="space-y-1 px-2 pb-3 pt-2">
+//             <Link to="/dashboard" className="block rounded-md bg-gray-900 px-3 py-2 text-base font-medium text-white">
+//               Dashboard
+//             </Link>
+//             <Link to="/team" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
+//               Team
+//             </Link>
+//             <Link to="/projects" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
+//               Projects
+//             </Link>
+//             <Link to="/calendar" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
+//               Calendar
+//             </Link>
+//             {!user && (
+//               <Link to="/sign-up" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
+//                 Sign Up
+//               </Link>
+//             )}
+//             <Link to={user ? "/profile" : "/sign-in"} className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
+//               {user ? "Profile" : "Sign In"}
+//             </Link>
+//           </div>
+//         </div>
+//       )}
+//     </nav>
+//   );
 // };
 
 // export default Navigation;
-
-

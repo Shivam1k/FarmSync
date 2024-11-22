@@ -195,8 +195,8 @@ const Footer = () => {
         <div className="row">
           {/* Logo and About Section */}
           <div className="col-md-4">
-          <Link className="navbar-brand" to="/"> <button class="  mb-3 p-1 ">
-          Digital Crop Calendar
+          <Link className="navbar-brand" to="/"> <button class="  mb-3 p-3 bg-green-500 rounded-xl shadow-2xl">
+          FarmSync
 </button></Link>
             <p>
               Plan, manage, and optimize your farming activities with ease using
@@ -271,3 +271,79 @@ const Footer = () => {
 };
 
 export default Footer;
+
+
+
+// import React from "react";
+
+// const Footer = () => {
+//   return (
+//     <footer className="bg-gray-900 text-gray-300 py-8">
+//       <div className="container mx-auto px-4">
+//         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+//           {/* About Section */}
+//           <div>
+//             <h3 className="text-white text-lg font-semibold">Digital Crop Calendar</h3>
+//             <p className="mt-2 text-gray-400">
+//               Plan, manage, and optimize your farming activities with ease using
+//               our smart digital tools. Grow better, farm smarter!
+//             </p>
+//           </div>
+
+//           {/* Quick Links */}
+//           <div>
+//             <h3 className="text-white text-lg font-semibold">Quick Links</h3>
+//             <ul className="mt-2 space-y-2">
+//               <li>
+//                 <a href="/features" className="hover:text-white">
+//                   Features
+//                 </a>
+//               </li>
+//               <li>
+//                 <a href="/about" className="hover:text-white">
+//                   About Us
+//                 </a>
+//               </li>
+//               <li>
+//                 <a href="/contact" className="hover:text-white">
+//                   Contact
+//                 </a>
+//               </li>
+//               <li>
+//                 <a href="/privacy-policy" className="hover:text-white">
+//                   Privacy Policy
+//                 </a>
+//               </li>
+//             </ul>
+//           </div>
+
+//           {/* Contact Information */}
+//           <div>
+//             <h3 className="text-white text-lg font-semibold">Contact Us</h3>
+//             <ul className="mt-2 space-y-2">
+//               <li>Email: support@digitalcropcalendar.com</li>
+//               <li>Phone: +123-456-7890</li>
+//               <li>Address: 123 Greenfield Ave, AgriCity</li>
+//             </ul>
+//             <div className="flex space-x-4 mt-4">
+//               <a href="#" className="text-gray-400 hover:text-white">
+//                 <i className="fab fa-facebook"></i>
+//               </a>
+//               <a href="#" className="text-gray-400 hover:text-white">
+//                 <i className="fab fa-twitter"></i>
+//               </a>
+//               <a href="#" className="text-gray-400 hover:text-white">
+//                 <i className="fab fa-instagram"></i>
+//               </a>
+//             </div>
+//           </div>
+//         </div>
+//         <div className="mt-8 border-t border-gray-700 pt-4 text-center">
+//           <p>© 2024 Digital Crop Calendar. All rights reserved.</p>
+//         </div>
+//       </div>
+//     </footer>
+//   );
+// };
+
+// export default Footer;
